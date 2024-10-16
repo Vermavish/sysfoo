@@ -35,9 +35,31 @@ pipeline {
     }
 
     stage('Package') {
-      steps {
-        echo 'Package: step 3'
-        sh 'mvn package -DskipTests'
+      parallel {
+        stage('Package') {
+          steps {
+            echo 'Package: step 3'
+            sh 'mvn package -DskipTests'
+          }
+        }
+
+        stage('Docker B&P') {
+          steps {
+            script {
+              docker.withRegistry('https://index.docker.io/v1/', 'dockerlogin')
+
+              {
+                def commitHash = env.GIT_COMMIT.take(7)
+                def dockerImage = docker.build("vermavish/sysfoo:${commitHash}", "./")
+                dockerImage.push()
+                dockerImage.push("latest")
+                dockerImage.push("dev")
+              }
+            }
+
+          }
+        }
+
       }
     }
 
