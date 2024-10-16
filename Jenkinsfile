@@ -11,7 +11,7 @@ pipeline {
     when {
 
     beforeAgent true
-    branch 'master'
+    branch 'main'
     }
     agent any
     steps {
