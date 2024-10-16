@@ -56,6 +56,10 @@ pipeline {
         }
 
         stage('Docker B&P') {
+        when {
+            beforeAgent true
+            branch 'main'
+            }
           agent any
           steps {
             script {
