@@ -1,4 +1,9 @@
 pipeline {
+   stage('Deploy to Dev') {
+   when {
+   beforeAgent true
+   branch 'main'
+   }
   agent any
   stages {
     stage('Build') {
